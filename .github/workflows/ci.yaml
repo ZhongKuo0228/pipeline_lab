@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - '**'
+    paths:
+      - 'webapp/**'
   pull_request:
     branches:
       - '**'
+    paths:
+      - 'webapp/**'
 
 jobs:
   test_and_lint:
