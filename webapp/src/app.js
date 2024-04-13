@@ -4,7 +4,7 @@ import { addTwoNumbers } from './controller/addTwoNumbers.js'
 const fastify = Fastify({ logger: true })
 
 fastify.get('/', async (request, reply) => {
-  return { task: '6-1' }
+  return { task: '6-1 pipeline' }
 })
 
 fastify.get('/addTwoNumbers/:num1/:num2', async (request, reply) => {
