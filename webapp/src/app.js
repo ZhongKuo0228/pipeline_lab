@@ -24,7 +24,7 @@ fastify.get('/addTwoNumbers/:num1/:num2', async (request, reply) => {
 
 const start = async () => {
   try {
-    await fastify.listen({ port: 3000 })
+    await fastify.listen({ port: 3000, host: '0.0.0.0' })
     console.log(`Server listening on ${fastify.server.address().port}`)
   } catch (err) {
     fastify.log.error(err)

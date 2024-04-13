@@ -22,16 +22,16 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20.9'  # 設定 Node.js 的版本
+          node-version: '20.9'
 
       - name: Install dependencies
         run: npm install
-        working-directory: webapp/src  # 指定工作目錄
+        working-directory: webapp/src
 
       - name: Run unit tests
         run: npm test
-        working-directory: webapp/src  # 指定工作目錄
+        working-directory: webapp/src
 
       - name: Run Lint
         run: npm run lint
-        working-directory: webapp/src  # 指定工作目錄
+        working-directory: webapp/src
