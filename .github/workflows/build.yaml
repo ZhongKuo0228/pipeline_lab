@@ -2,16 +2,6 @@ name: Full CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - '**'
-    paths:
-      - 'webapp/**'
-  pull_request:
-    branches:
-      - '**'
-    paths:
-      - 'webapp/**'
-  create:
     tags:
       - 'v*'
 
@@ -19,7 +9,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: '20.x'  # 請確認這是一個有效的 Node.js 版本
