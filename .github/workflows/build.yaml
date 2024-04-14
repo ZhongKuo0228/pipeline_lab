@@ -40,7 +40,7 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-      - name: Build, tag, and push docker image to Amazon ECR
+      - name: Build, tag docker image
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: ${{ env.ECR_REPOSITORY }}  # 確保這裡引用了設置在全局環境變量中的 ECR_REPOSITORY
@@ -48,6 +48,24 @@ jobs:
         working-directory: webapp/src
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-          curl -sSfL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh | sh -s --
-          docker-scout quickview $REGISTRY/$REPOSITORY:$IMAGE_TAG
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+
+      - name: Docker Scout
+        id: docker-scout
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: ${{ env.ECR_REPOSITORY }}  # 確保這裡引用了設置在全局環境變量中的 ECR_REPOSITORY
+          IMAGE_TAG: ${{ github.ref_name }}
+        uses: docker/scout-action@dd36f5b0295baffa006aa6623371f226cc03e506
+        with:
+          command: cves
+          image: $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          only-severities: critical,high
+          exit-code: true
+      - name: push docker image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: ${{ env.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.ref_name }}
+        working-directory: webapp/src
+        run: |
+            docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
