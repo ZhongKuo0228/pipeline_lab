@@ -4,6 +4,9 @@ on:
   push:
     tags:
       - 'v*'
+env:
+  AWS_REGION: ap-northeast-1
+  ECR_REPOSITORY: task-6-1
 
 jobs:
   test:
@@ -31,16 +34,16 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4 # More information on this action can be found below in the 'AWS Credentials' section
         with:
-          role-to-assume: arn:aws:iam::332211267476:role/task-6-1
-          aws-region: 'ap-northeast-1'
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
       - name: Build, tag, and push docker image to Amazon ECR
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: task-6-1
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: ${{ github.ref_name }}
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
