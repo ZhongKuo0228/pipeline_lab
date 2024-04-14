@@ -46,5 +46,6 @@ jobs:
           REPOSITORY: ${{ env.ECR_REPOSITORY }}  # 確保這裡引用了設置在全局環境變量中的 ECR_REPOSITORY
           IMAGE_TAG: ${{ github.ref_name }}
         run: |
+          cd /webapp/src
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
