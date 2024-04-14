@@ -10,6 +10,11 @@ on:
         options:
           - 'v0.0.9'
 
+env:
+  ecr: 332211267476.dkr.ecr.ap-northeast-1.amazonaws.com
+  image: task-6-1
+  cluster: task-6-1-eks
+
 jobs:
   notify-discord:
     runs-on: ubuntu-latest
@@ -18,16 +23,22 @@ jobs:
         run: |
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d '{"content": "Webapp ${{ github.event.inputs.tag }} 準備部署! 請 Approve: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' \
+          -d '{"content": "Webapp ${{ github.event.inputs.tag }} 準備部署到 Production! 請協助 Approve: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' \
           ${{ secrets.DISCORD_WEBHOOK_URL }}
 
   deploy:
     needs: notify-discord
     runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
     steps:
-      - name: Deploy to EKS
-        run: |
-          echo "Deploying to EKS..."
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to AWS EKS
+        uses: giovannirossini/aws-eks@v1.0.2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: "ap-northeast-1"
+          cluster-name: ${{ env.cluster }}
+          command: |
+            kubectl apply -f webapp/k8s/webapp.yaml
