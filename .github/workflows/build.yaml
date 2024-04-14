@@ -48,4 +48,5 @@ jobs:
         working-directory: webapp/src
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker scout quickview $REGISTRY/$REPOSITORY:$IMAGE_TAG
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG

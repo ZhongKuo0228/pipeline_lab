@@ -1,4 +1,4 @@
-name: Task-6-1 Pipeline
+name: Test And Lint
 
 on:
   push:
