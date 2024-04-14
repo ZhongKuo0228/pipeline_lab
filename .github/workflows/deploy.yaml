@@ -9,6 +9,7 @@ on:
         type: choice
         options:
           - 'v0.0.9'
+          - 'v0.0.10'
 
 env:
   ecr: 332211267476.dkr.ecr.ap-northeast-1.amazonaws.com
@@ -43,4 +44,5 @@ jobs:
           script: |
             cd pipeline_lab
             git pull
+            sed -i "s|${{ env.ecr }}/${{ env.image }}:.*|${{ env.ecr }}/${{ env.image }}:${{ github.event.inputs.tag }}|g" webapp/k8s/webapp.yaml
             kubectl apply -f webapp/k8s/webapp.yaml
