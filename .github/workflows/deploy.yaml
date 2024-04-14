@@ -17,7 +17,8 @@ jobs:
       - name: Send workflow URL to Discord
         run: |
           curl -H "Content-Type: application/json" \
-          -d '{"content": "A new deployment has been initiated! Approve it here: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' \
+          -X POST \
+          -d '{"content": "Webapp ${{ github.event.inputs.tag }} 準備部署! 請 Approve: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' \
           ${{ secrets.DISCORD_WEBHOOK_URL }}
 
   deploy:
