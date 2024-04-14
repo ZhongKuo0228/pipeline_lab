@@ -1,4 +1,4 @@
-name: Full CI/CD Pipeline
+name: Build And Push Image
 
 on:
   push:
