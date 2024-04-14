@@ -14,11 +14,11 @@ jobs:
   notify-discord:
     runs-on: ubuntu-latest
     steps:
-      - name: Send Workflow URL to Discord
-        uses: nobrayner/discord-webhook@v1
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          message: "A new deployment has been initiated. Approve it here: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      - name: Send workflow URL to Discord
+        run: |
+          curl -H "Content-Type: application/json" \
+          -d '{"content": "A new deployment has been initiated! Approve it here: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' \
+          ${{ secrets.DISCORD_WEBHOOK_URL }}
 
   deploy:
     needs: notify-discord
